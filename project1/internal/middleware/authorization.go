@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"errors"
-	"main/api"
 	"net/http"
 
 	"github.com/maxrmax/go-api-projects/project1/api"

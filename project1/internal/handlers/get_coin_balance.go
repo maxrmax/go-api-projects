@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"main/api"
-	"main/internal/tools"
 	"net/http"
 
 	"github.com/gorilla/schema"
@@ -17,7 +15,7 @@ func GetCoinBalance(w http.ResponseWriter, r *http.Request) {
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
 
-	err = decoder.Decoder(&params, r.URL.Query())
+	err = decoder.Decode(&params, r.URL.Query())
 
 	if err != nil {
 		log.Error(err)

@@ -1,10 +1,10 @@
 package handlers
 
-import {
+import (
 	"github.com/go-chi/chi"
 	chimiddle "github.com/go-chi/chi/middleware"
 	"github.com/maxrmax/go-api-projects/project1/internal/middleware"
-}
+)
 
 // starts with capital H, tells the compiler the function can be imported in other packages
 // lower case is a private function -> main package wouldn't be able to import it

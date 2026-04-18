@@ -1,15 +1,15 @@
 package tools
 
-import {
+import (
 	"time"
-}
+)
 
 type mockDB struct{}
 
 var mockLoginDetails = map[string]LoginDetails{
 	"Jotaro": {
 		AuthToken: "123456",
-		Username: "Jotaro".
+		Username:  "Jotaro",
 	},
 	"Dio": {
 		AuthToken: "666FFF",
@@ -36,7 +36,7 @@ var mockCoinDetails = map[string]CoinDetails{
 	},
 }
 
-func (d, *mockDB) GetUserLoginDetails(username string) *LoginDetails {
+func (d *mockDB) GetUserLoginDetails(username string) *LoginDetails {
 	// simulate DB call
 	time.Sleep(time.Second * 1)
 
@@ -49,7 +49,7 @@ func (d, *mockDB) GetUserLoginDetails(username string) *LoginDetails {
 	return &clientData
 }
 
-func (d, *mockDB) GetUserCoins(username string) *CoinDetails {
+func (d *mockDB) GetUserCoins(username string) *CoinDetails {
 	// simulate DB call
 	time.Sleep(time.Second * 1)
 
