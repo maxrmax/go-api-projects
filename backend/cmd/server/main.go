@@ -16,15 +16,8 @@ import (
 
 func main() {
 
-	// Internally:
-	// - two maps are created: customers and users
-	// - both maps store pointers to structs (*Customer, *User)
-	// - initially one customer and one user are inserted
-	// Result:
-	//	store ---> MemoryStore{ customers: map, users: map }
 	store := store.NewMemoryStore()
 
-	// --- SERVICE LAYER INITIALIZATION ---
 	// Services are thin wrappers around the store.
 	// copies pointer.
 	//	authService.store		---> store
@@ -32,21 +25,17 @@ func main() {
 	authService := service.NewAuthService(store)
 	customerService := service.NewCustomerService(store)
 
-	// --- HANDLER LAYER INITIALIZATION ---
 	// Handlers are HTTP-facing components.
-	// Chain now becomes:
+	// Chain now becomes (copies pointer)
 	//	authHandler		---> authService		---> store
 	//	customerHandler	---> customerService	---> store
 	authHandler := api.NewAuthHandler(authService)
 	customerHandler := api.NewCustomerHandler(customerService)
 
-	// --- ROUTER CONSTRUCTION ---
 	// api.NewRouter returns *http.ServeMux.
 	// ServeMux is a request multiplexer:
 	// - matches incoming HTTP request paths
 	// - dispatches them to registered handlers
-	// Second argument:
-	//	api.AuthMiddleware(customerHandler)
 	router := api.NewRouter(
 		authHandler,
 		api.AuthMiddleware(customerHandler),

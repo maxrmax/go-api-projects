@@ -14,8 +14,6 @@ type User struct {
 
 // --- CUSTOMER MODEL ---
 // Data struct with JSON tags.
-//
-// Tags define how fields are encoded to JSON keys.
 type Customer struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
@@ -75,15 +73,14 @@ func (s *MemoryStore) GetUser(username string) *User {
 
 func (s *MemoryStore) GetAllCustomers() []*Customer {
 
-	// --- SLICE DECLARATION ---
 	// result is nil slice initially.
 	var result []*Customer
 
-	// --- ITERATION ---
-	// for range over map:
-	// key is ignored, value is *Customer
-	for _, customer := range s.customers {
-		result = append(result, customer)
+	// gets all customer from ID 1 until max ID (nextID)
+	for i := 1; i < s.nextID; i++ {
+		if c, ok := s.customers[strconv.Itoa(i)]; ok {
+			result = append(result, c)
+		}
 	}
 	return result
 }
@@ -109,8 +106,8 @@ func (s *MemoryStore) CreateCustomer(c *Customer) error {
 		ID:        id,
 		Name:      c.Name,
 		Comment:   c.Comment,
-		Status:    "active",
-		Score:     0,
+		Status:    c.Status,
+		Score:     c.Score,
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
@@ -123,6 +120,8 @@ func (s *MemoryStore) UpdateCustomer(id string, c *Customer) bool {
 	if exists {
 		s.customers[id].Name = c.Name
 		s.customers[id].Comment = c.Comment
+		s.customers[id].Score = c.Score
+		s.customers[id].Status = c.Status
 		s.customers[id].UpdatedAt = time.Now().UTC().Format(time.DateTime)
 		return true
 	}

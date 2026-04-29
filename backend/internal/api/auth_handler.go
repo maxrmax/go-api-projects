@@ -3,7 +3,6 @@ package api
 import (
 	// JSON decoding from request body and encoding to response
 	"encoding/json"
-	// HTTP interfaces and helpers
 	"net/http"
 
 	// provides AuthService
@@ -18,8 +17,7 @@ func NewAuthHandler(s *service.AuthService) *AuthHandler {
 	return &AuthHandler{service: s}
 }
 
-// This method is called once per incoming HTTP request
-// that matches the route bound to this handler.
+// This method is called once per incoming HTTP request if not authorized
 func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)

@@ -3,9 +3,7 @@ package api
 import (
 	// JSON encoding of responses
 	"encoding/json"
-	// HTTP interfaces and helpers
 	"net/http"
-	// string prefix check
 	"strings"
 
 	// provides CustomerService
@@ -26,7 +24,6 @@ func NewCustomerHandler(s *service.CustomerService) *CustomerHandler {
 
 // Called for every request routed to this handler.
 func (h *CustomerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// --- DEFAULT HEADER SET ---
 	// All responses from this handler will declare JSON content,
 	w.Header().Set("Content-Type", "application/json")
 
@@ -35,20 +32,11 @@ func (h *CustomerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// --- ROUTE: PREFIX MATCH ---
-	// Matches:
-	// "/customers/1"
-	// "/customers/abc"
-	// "/customers/anything"
-	// Does NOT extract ID. Only routes based on prefix.
 	if strings.HasPrefix(r.URL.Path, "/customers/") {
 		h.handleItem(w, r)
 		return
 	}
 
-	// --- FALLBACK ---
-	// If neither condition matched:
-	// write 404 response
 	http.NotFound(w, r)
 }
 
