@@ -2,7 +2,8 @@ package store
 
 import (
 	"errors" // constructs error values
-	"time"   // timestamp generation and formatting
+	"strconv"
+	"time" // timestamp generation and formatting
 )
 
 type User struct {
@@ -28,6 +29,7 @@ type Customer struct {
 type MemoryStore struct {
 	customers map[string]*Customer
 	users     map[string]*User
+	nextID    int
 }
 
 // Allocates MemoryStore and initializes maps with data.
@@ -59,6 +61,7 @@ func NewMemoryStore() *MemoryStore {
 				AuthToken: "demo-token",
 			},
 		},
+		nextID: 2,
 	}
 }
 
@@ -96,19 +99,31 @@ func (s *MemoryStore) GetCustomer(id string) (*Customer, error) {
 }
 
 func (s *MemoryStore) CreateCustomer(c *Customer) error {
-
+	now := time.Now().UTC().Format(time.DateTime)
 	_, exists := s.customers[c.ID]
 	if exists {
 		return errors.New("already exists")
 	}
-	s.customers[c.ID] = c
+	id := strconv.Itoa(s.nextID)
+	s.customers[id] = &Customer{
+		ID:        id,
+		Name:      c.Name,
+		Comment:   c.Comment,
+		Status:    "active",
+		Score:     0,
+		CreatedAt: now,
+		UpdatedAt: now,
+	}
+	s.nextID++
 	return nil
 }
 
 func (s *MemoryStore) UpdateCustomer(id string, c *Customer) bool {
 	_, exists := s.customers[id]
 	if exists {
-		s.customers[id] = c
+		s.customers[id].Name = c.Name
+		s.customers[id].Comment = c.Comment
+		s.customers[id].UpdatedAt = time.Now().UTC().Format(time.DateTime)
 		return true
 	}
 	return false
