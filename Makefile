@@ -3,10 +3,14 @@ BACKEND_DIR := backend
 FRONTEND_DIR := frontend
 
 # ===== TARGETS =====
-
-.PHONY: all backend frontend dev stop clean
+.PHONY: all backend frontend dev install stop clean
 
 all: dev
+
+# install dependencies
+install:
+	@echo "installing frontend dependencies"
+	cd $(FRONTEND_DIR) && pnpm install
 
 # run both
 dev:
@@ -20,10 +24,6 @@ backend:
 # frontend only
 frontend:
 	cd $(FRONTEND_DIR) && pnpm dev
-
-# optional: stop (only works if you background processes manually)
-stop:
-	@echo "stop manually (ctrl+c)"
 
 # cleanup (optional)
 clean:
